@@ -1,11 +1,11 @@
 {
-  "name": "e-commerce",
+  "name": "devops-live-project",
   "version": "1.0.0",
-  "description": "Frontend E-commerce DevOps Project",
-  "main": "index.html",
   "scripts": {
-    "start": "npx serve ."
+    "test": "echo Test Passed",
+    "start": "node app.js"
   },
-  "author": "DevOps Project",
-  "license": "ISC"
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
