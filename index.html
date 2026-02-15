@@ -3,6 +3,7 @@
 <head>
   <title>DevOps E-Commerce</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
@@ -17,10 +18,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    header h2 {
-      margin: 0;
     }
 
     .cart-btn {
@@ -63,7 +60,7 @@
       border-radius: 10px;
     }
 
-    button {
+    .card button {
       background: #667eea;
       color: white;
       border: none;
@@ -73,10 +70,11 @@
       margin-top: 10px;
     }
 
-    button:hover {
+    .card button:hover {
       background: #764ba2;
     }
 
+    /* CART PANEL */
     .cart-panel {
       position: fixed;
       right: 0;
@@ -88,15 +86,42 @@
       padding: 20px;
       display: none;
       overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
     .cart-item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 10px;
       background: #f2f2f2;
       padding: 8px;
       border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .cart-item button {
+      background: crimson;
+      border: none;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
     .total {
@@ -106,6 +131,7 @@
     }
   </style>
 </head>
+
 <body>
 
 <header>
@@ -115,18 +141,23 @@
 
 <div class="products" id="products"></div>
 
+<!-- CART -->
 <div class="cart-panel" id="cart">
-  <h3>Your Cart</h3>
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-btn" onclick="closeCart()">Close</button>
+  </div>
+  <hr>
   <div id="cart-items"></div>
-  <div class="total">Total: ₹<span id="total">0</span></div>
+  <div class="total">Total: $<span id="total">0</span></div>
 </div>
 
 <script>
   const products = [
-    { id: 1, name: "Laptop", price: 50000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8" },
-    { id: 2, name: "Headphones", price: 2000, image: "https://images.unsplash.com/photo-1518443895914-6c2c3e5c3a3a" },
-    { id: 3, name: "Smartphone", price: 30000, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" },
-    { id: 4, name: "Shoes", price: 2500, image: "https://images.unsplash.com/photo-1528701800489-20be7c3f6f68" }
+    { id: 1, name: "Laptop", price: 50000, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=60" },
+    { id: 2, name: "Headphones", price: 2000, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=60" },
+    { id: 3, name: "Smartphone", price: 30000, image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=600&q=60" },
+    { id: 4, name: "Shoes", price: 2500, image: "https://images.unsplash.com/photo-1528701800489-20be7c3f6f68?auto=format&fit=crop&w=600&q=60" }
   ];
 
   let cart = [];
@@ -136,9 +167,9 @@
   products.forEach(product => {
     productContainer.innerHTML += `
       <div class="card">
-        <img src="${product.image}">
+        <img src="${product.image}" alt="${product.name}">
         <h3>${product.name}</h3>
-        <p>₹${product.price}</p>
+        <p>$${product.price}</p>
         <button onclick="addToCart(${product.id})">Add to Cart</button>
       </div>
     `;
@@ -160,13 +191,19 @@
 
     const cartItems = document.getElementById("cart-items");
     cartItems.innerHTML = "";
+
     let total = 0;
+
+    if (cart.length === 0) {
+      cartItems.innerHTML = "<p>No items in cart</p>";
+    }
 
     cart.forEach((item, index) => {
       total += item.price;
+
       cartItems.innerHTML += `
         <div class="cart-item">
-          <span>${item.name} - ₹${item.price}</span>
+          <span>${item.name} - $${item.price}</span>
           <button onclick="removeFromCart(${index})">X</button>
         </div>
       `;
@@ -179,12 +216,19 @@
     document.getElementById("cart").style.display = "block";
   }
 
+  function closeCart() {
+    document.getElementById("cart").style.display = "none";
+  }
+
+  // Close cart if clicking outside
   document.addEventListener("click", function(event) {
     const cartPanel = document.getElementById("cart");
     const cartButton = document.querySelector(".cart-btn");
 
-    if (!cartPanel.contains(event.target) && !cartButton.contains(event.target)) {
-      cartPanel.style.display = "none";
+    if (!cartPanel.contains(event.target) && 
+        !cartButton.contains(event.target) &&
+        cartPanel.style.display === "block") {
+      closeCart();
     }
   });
 </script>
