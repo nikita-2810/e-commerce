@@ -1,0 +1,11 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "Frontend E-commerce DevOps Project",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "author": "DevOps Project",
+  "license": "ISC"
+}

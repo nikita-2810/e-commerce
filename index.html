@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DevOps E-Commerce</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    .cart-btn {
+      background: #ff4b2b;
+      border: none;
+      padding: 10px 15px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-btn:hover {
+      background: #ff416c;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #764ba2;
+    }
+
+    .cart-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 350px;
+      height: 100%;
+      background: white;
+      box-shadow: -3px 0 10px rgba(0,0,0,0.3);
+      padding: 20px;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background: #f2f2f2;
+      padding: 8px;
+      border-radius: 5px;
+    }
+
+    .total {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>DevOps Shop</h2>
+  <button class="cart-btn" onclick="openCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+</header>
+
+<div class="products" id="products"></div>
+
+<div class="cart-panel" id="cart">
+  <h3>Your Cart</h3>
+  <div id="cart-items"></div>
+  <div class="total">Total: ₹<span id="total">0</span></div>
+</div>
+
+<script>
+  const products = [
+    { id: 1, name: "Laptop", price: 50000, image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8" },
+    { id: 2, name: "Headphones", price: 2000, image: "https://images.unsplash.com/photo-1518443895914-6c2c3e5c3a3a" },
+    { id: 3, name: "Smartphone", price: 30000, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" },
+    { id: 4, name: "Shoes", price: 2500, image: "https://images.unsplash.com/photo-1528701800489-20be7c3f6f68" }
+  ];
+
+  let cart = [];
+
+  const productContainer = document.getElementById("products");
+
+  products.forEach(product => {
+    productContainer.innerHTML += `
+      <div class="card">
+        <img src="${product.image}">
+        <h3>${product.name}</h3>
+        <p>₹${product.price}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+      </div>
+    `;
+  });
+
+  function addToCart(id) {
+    const item = products.find(p => p.id === id);
+    cart.push(item);
+    updateCart();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCart();
+  }
+
+  function updateCart() {
+    document.getElementById("cart-count").innerText = cart.length;
+
+    const cartItems = document.getElementById("cart-items");
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price;
+      cartItems.innerHTML += `
+        <div class="cart-item">
+          <span>${item.name} - ₹${item.price}</span>
+          <button onclick="removeFromCart(${index})">X</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("total").innerText = total;
+  }
+
+  function openCart() {
+    document.getElementById("cart").style.display = "block";
+  }
+
+  document.addEventListener("click", function(event) {
+    const cartPanel = document.getElementById("cart");
+    const cartButton = document.querySelector(".cart-btn");
+
+    if (!cartPanel.contains(event.target) && !cartButton.contains(event.target)) {
+      cartPanel.style.display = "none";
+    }
+  });
+</script>
+
+</body>
+</html>
